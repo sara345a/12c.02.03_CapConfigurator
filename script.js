@@ -37,18 +37,52 @@ function toggleOption(event) {
   // - create FLIP-animation to animate featureElement to img in target
   // - when animation is complete, remove featureElement from the DOM
   
+
   if (features[feature]) {
     // feature added
+    console.log(`Feature ${feature} is turned off!`);
+
+    // TODO: More code
+    features[feature] = false;
+    target.classList.add("chosen");
+
+    document.querySelector(`[data-feature=${feature}]`).classList.add("hide");
+
+    const newFeatureElement = document.querySelector(`ul [data-feature=${feature}]`);
+    document.querySelector("#selected ul").appendChild(newFeatureElement); 
+
+    const start = document.querySelector(`[data-feature=${feature}] img`).getBoundingClientRect();
+    const end = newFeatureElement.getBoundingClientRect();
+
+    const diffX = start.x - end.x;
+    const diffY = start.y - end.y;
+
+    newFeatureElement.style.setProperty("--diffX", diffX);
+    newFeatureElement.style.setProperty("--diffY", diffY);
+
+    newFeatureElement.classList.add("animate-feature-out");
+    newFeatureElement.addEventListener("animationend", () => document.querySelector(`ul [data-feature=${feature}]`).remove());
+
+    
+  } else {
+    // feature removed
     console.log(`Feature ${feature} is turned on!`);
 
     // TODO: More code
+    features[feature] = true;
+    target.classList.add("chosen");
+    document.querySelector(`[data-feature=${feature}]`).classList.remove("hide");
+    const featureElement = createFeatureElement(feature);
+    document.querySelector("ul").append(featureElement);
 
-  } else {
-    // feature removed
-    console.log(`Feature ${feature} is turned off!`);
-    
-    // TODO: More code
+    const start = document.querySelector(`[data-feature=${feature}] img`).getBoundingClientRect();
+    const end = featureElement.getBoundingClientRect();
 
+    const diffX = start.x - end.x;
+    const diffY = start.y - end.y;
+    featureElement.style.setProperty("--diffX", diffX);
+    featureElement.style.setProperty("--diffY", diffY);
+    featureElement.classList.add("animate-feature-in");
   }
 }
 
